@@ -27,8 +27,17 @@ environ.Env.read_env(
     env_file = os.path.join(BASE_DIR,'.env')
 )
 
-# SECRET_KEY 추가
-SECRET_KEY = env('SECRET_KEY')
+# SECRET_KEY - Docker Secrets와 환경변수 모두 지원
+def get_secret_key():
+    # Docker Secrets 우선 확인
+    secret_file = '/run/secrets/DJANGO_SECRET_KEY'
+    if os.path.exists(secret_file):
+        with open(secret_file, 'r') as f:
+            return f.read().strip()
+    # 환경변수 fallback
+    return env('DJANGO_SECRET_KEY')
+
+SECRET_KEY = get_secret_key()
 
 # Application definition
 

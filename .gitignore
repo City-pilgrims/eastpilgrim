@@ -95,3 +95,4 @@ __pycache__/
 *.pyc
 
 docker-compose.yml
+docker-compose_test.yml
