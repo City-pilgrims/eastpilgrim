@@ -1,0 +1,127 @@
+
+    <style>
+        .bethel_nav {
+            display: flex; /* 메뉴들을 flexbox로 정렬 */
+            justify-content: space-around; /* 공간을 균등하게 배분 */
+            align-items: center; /* 수직 중앙 정렬 */
+            max-width: 700px;
+            margin: 0 auto;
+            gap: 2rem;
+        }
+
+        .bethel_header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            width: 100%;
+            background-color: #5A1E1E;
+            text-align: center;
+            z-index: 1000;
+            font-size: 16px; /* 고정 크기 추가 */
+        }
+
+        .bethel_logo {
+            font-family: 'NanumDdoBagDdoBag';
+            color: #FFD700 !important;
+            font-size: 2rem; /* 고정 크기 추가 */
+            font-weight: bold;
+        }
+
+        .bethel_header a {
+            text-decoration: none;
+            font-weight: bold;
+            color: white; /* 부모 요소의 색상 상속 */
+        }
+
+        .menu-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .menu-toggle {
+            color: #f8f9fa !important; /* 메뉴 버튼 글자를 하얀색으로 변경 */
+            border: none;
+            background-color: transparent;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 150px;
+            padding: 5px;
+            border-radius: 5px;
+            z-index: 1100;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .menu a {
+            display: block;
+            color: #f8f9fa !important;
+            text-decoration: none;
+            padding: 5px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+
+        .menu a:hover {
+            background-color: #575757;
+        }
+
+        .menu.show {
+            display: block;
+        }
+    </style>
+
+    <div class="bethel_header" style="height: 100px;">
+        <div style="margin-bottom: 20px;">
+            <a href="{% url 'preachapp:intro' %}">
+                <h1 class="bethel_logo">The East Pilgrim, Joshua Lee</h1>
+            </a>
+        </div>
+        <div class="bethel_nav">
+            <a href="{% url 'preachapp:weekly_preaching_list' %}">
+                <span>Sermon</span>
+            </a>
+
+            <a href="{% url 'boardapp:board_list' %}">
+                <span>Conversation</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggles = document.querySelectorAll('.menu-toggle');
+
+            toggles.forEach(function(toggleBtn) {
+                const menuId = toggleBtn.getAttribute('data-target');
+                const menu = document.getElementById(menuId);
+
+                // 버튼 클릭 시 해당 메뉴 열고 닫기
+                toggleBtn.addEventListener('click', function(event) {
+                    event.stopPropagation(); // 클릭 버블 방지
+
+                    // 모든 메뉴 닫기 (다중 메뉴 대비)
+                    document.querySelectorAll('.menu').forEach(m => m.classList.remove('show'));
+
+                    // 해당 메뉴 toggle
+                    menu.classList.toggle('show');
+                });
+
+                // 바깥 클릭 시 메뉴 닫기
+                document.addEventListener('click', function(event) {
+                    if (!menu.contains(event.target) && event.target !== toggleBtn) {
+                        menu.classList.remove('show');
+                    }
+                });
+            });
+        });
+    </script>

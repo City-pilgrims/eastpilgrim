@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .content-list {
+        max-width: 900px;
+        margin: 0px auto 20px;
+        padding: 10px 20px;
+        padding-top: 10px;
+        min-height: auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .content-card {
+        border-radius: 20px;
+        background: white;
+        overflow: hidden;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+        padding: 15px;
+        margin-top: 10px; /* 50px에서 줄임 */
+        /* 애니메이션 초기 상태 복원 */
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    /* 애니메이션 활성화 상태 */
+    .content-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .content-card h2 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+        color: #000;
+    }
+
+    .content-card p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .content-card img {
+        width: 100%;
+        border-radius: 16px;
+        margin-top: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .content-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .content-card .author-info {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #f0f0f0;
+        width: 100%;
+    }
+
+    .content-card .author-info .author-details {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        padding-top: 2px;
+        text-align: right;
+    }
+
+    .content-card .author-info .content-created-date {
+        font-size: 0.75rem;
+        color: #999;
+        margin: 0;
+        line-height: 1.1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: right;
+        width: 100%;
+    }
+
+    .content-card > a {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .no-content {
+        grid-column: 1 / -1;
+        text-align: center;
+        color: #999;
+        margin-top: 2rem;
+    }
+
+    @media (max-width: 700px) {
+        .content-list {
+            grid-template-columns: repeat(2, 1fr);
+            padding: 10px 10px;
+            gap: 12px;
+            max-width: 95%;
+            min-height: auto;
+            padding-top: 10px !important;
+        }
+
+        .content-card {
+            margin-top: 5px; /* 모바일에서 더 작게 */
+            padding: 12px;
+            /* 모바일에서도 애니메이션 유지 */
+            transform: translateY(20px); /* 더 작은 이동 거리 */
+        }
+
+        .content-card p {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .content-created-date {
+            font-size: 0.7rem;
+        }
+    }
+
+    /* 매우 작은 화면에서만 1열 */
+    @media (max-width: 350px) {
+        .content-list {
+            grid-template-columns: 1fr;
+            padding-top: 10px !important;
+        }
+    }
+
+    /* 휴대폰 크기 (480px 이하) - 2열 유지 */
+    @media (max-width: 480px) {
+        .content-list {
+            grid-template-columns: repeat(2, 1fr);
+            padding: 10px;
+            gap: 10px;
+            max-width: 95%;
+            padding-top: 20px !important;
+        }
+
+        .content-card {
+            margin-top: 0px; /* 거의 붙임 */
+            padding: 10px;
+        }
+
+        .content-card p {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .content-created-date {
+            font-size: 0.65rem;
+        }
+
+        .content-card img {
+            border-radius: 12px;
+        }
+    }
+</style>
+
+<div class="content-list" id="contentList">
+  {% if contents %}
+    {% for content in contents %}
+      <div class="content-card"> <!-- visible 클래스 제거 -->
+        <a href="{% url 'preachapp:weekly_preaching_detail' pk=content.pk %}">
+          <div class="author-info">
+            <div class="author-details">
+              <p class="content-created-date">
+                {{ content.created_at|date:"Y년 n월 j일" }}
+              </p>
+            </div>
+          </div>
+
+          <p style="font-family: CrimsonText-SemiBold; font-size: 1.1rem; word-break: break-word; overflow-wrap: break-word;">
+              {{ content.title }}
+          </p>
+
+          {% if content.first_image and content.first_image.image %}
+            <img src="{{ content.first_image.image.url }}" alt="블록 이미지">
+          {% endif %}
+        </a>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="no-content">작성된 콘텐츠가 없습니다.</p>
+  {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // IntersectionObserver로 애니메이션 트리거
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px' // 요소가 조금 더 보일 때 트리거
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // 약간의 지연으로 자연스러운 애니메이션
+                setTimeout(() => {
+                    entry.target.classList.add('visible');
+                }, 100);
+                observer.unobserve(entry.target); // 한 번만 실행
+            }
+        });
+    }, observerOptions);
+
+    // 모든 카드에 observer 적용
+    const cards = document.querySelectorAll('.content-card');
+    cards.forEach((card, index) => {
+        // 카드별로 약간의 지연 시간 추가 (순차적 애니메이션)
+        card.style.transitionDelay = `${index * 0.1}s`;
+        observer.observe(card);
+    });
+
+    // 모바일에서 스크롤 이벤트도 추가 (IntersectionObserver 보완)
+    let scrollTimeout;
+    window.addEventListener('scroll', function() {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+
+                if (isVisible && !card.classList.contains('visible')) {
+                    card.classList.add('visible');
+                }
+            });
+        }, 50);
+    }, { passive: true });
+});
+</script>
+{% endblock %}

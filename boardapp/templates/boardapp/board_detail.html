@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+
+<style>
+    .detail-wrapper {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        margin-top: 0px;
+        margin-bottom: 40px;
+        box-sizing: border-box;
+    }
+
+    .detail-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .detail-date {
+        font-size: 1rem;
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .detail-menu {
+        text-decoration: none;
+        color: #495057;
+        font-size: 1.2rem;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: background-color 0.2s;
+    }
+
+    .detail-menu:hover {
+        background-color: #f8f9fa;
+        text-decoration: none;
+        color: #495057;
+    }
+
+    .detail-content {
+        margin-bottom: 25px;
+        text-align: left;
+    }
+
+    .detail-text {
+        font-size: 1.2rem;
+        line-height: 1.7;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        word-wrap: break-word;
+        word-break: keep-all;
+        font-weight: bold;
+        letter-spacing: 0.3px;
+
+
+    }
+
+    .detail-image {
+        text-align: center;
+        margin: 25px 0;
+    }
+
+    .detail-image img {
+        width: 100%;
+        max-width: 500px;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    /* 모바일 최적화 */
+    @media (max-width: 700px) {
+        .detail-wrapper {
+            margin: 0px 15px 30px 15px;
+            padding: 18px;
+            max-width: none;
+        }
+
+        .detail-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .detail-date {
+            font-size: 0.9rem;
+        }
+
+        .detail-menu {
+            font-size: 1.1rem;
+            padding: 6px 10px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .detail-wrapper {
+            margin: 0px 10px 20px 10px;
+            padding: 15px;
+        }
+
+        .detail-text {
+            font-size: 1rem;
+        }
+
+        .detail-date {
+            font-size: 0.85rem;
+        }
+    }
+
+    /* 팝업 관련 스타일 - 기존 유지하되 개선 */
+    .popup-actions {
+        display: none;
+        position: absolute;
+        padding: 10px;
+        z-index: 990;
+        top: 55%;
+        left: 68%;
+    }
+
+    .popup-actions a {
+        display: block;
+        margin: 10px 0;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: white;
+        background: #007bff;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 30%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 980;
+        display: none;
+    }
+</style>
+
+<!-- Content -->
+<div style="background-color: #f8f9fa; min-height: 100vh; padding: 20px 0;">
+    <div class="detail-wrapper">
+        <!-- 헤더 영역 -->
+        <div class="detail-header">
+            <div class="detail-date">
+                {{ board_contents.created_at|format_date }}
+            </div>
+            <div>
+                <a href="{% url 'boardapp:board_list' %}" class="detail-menu">
+                    ☰
+                </a>
+            </div>
+        </div>
+
+        <!-- 본문 영역 -->
+        <div class="detail-content">
+            <div class="detail-text">
+                {{ board_contents.content|linebreaks }}
+            </div>
+
+            {% if board_contents.image %}
+                <div class="detail-image">
+                    <img src="{{ board_contents.image.url }}" alt="게시글 이미지" loading="lazy">
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- 팝업 오버레이 -->
+<div id="overlay" class="overlay" style="display: none;" onclick="closePopup()"></div>
+
+<script>
+// 기존 JavaScript 함수들 유지
+function toggleActions(event) {
+    var popup = document.getElementById("popup-actions");
+    var overlay = document.getElementById("overlay");
+
+    var rect = event.currentTarget.getBoundingClientRect();
+    var topPosition = rect.top + window.scrollY;
+    var leftPosition = rect.left + window.scrollX;
+
+    popup.style.top = `${topPosition + 40}px`;
+    popup.style.left = `${leftPosition - 80}px`;
+    popup.style.display = "block";
+
+    overlay.style.top = `${topPosition}px`;
+    overlay.style.display = "block";
+}
+
+function closePopup() {
+    const popup = document.getElementById("popup-actions");
+    const overlay = document.getElementById("overlay");
+    if (popup) popup.style.display = "none";
+    if (overlay) overlay.style.display = "none";
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const popup = document.getElementById("popup-actions");
+    const overlay = document.getElementById("overlay");
+
+    document.addEventListener('click', function(event) {
+        if (popup && popup.style.display === "block") {
+            if (!popup.contains(event.target) &&
+                !event.target.closest('button[onclick*="toggleActions"]')) {
+                closePopup();
+            }
+        }
+    });
+
+    document.addEventListener('touchstart', function(event) {
+        if (popup && popup.style.display === "block") {
+            if (!popup.contains(event.target) &&
+                !event.target.closest('button[onclick*="toggleActions"]')) {
+                closePopup();
+            }
+        }
+    });
+
+    if (overlay) {
+        overlay.addEventListener('click', closePopup);
+        overlay.addEventListener('touchstart', closePopup);
+    }
+});
+
+function confirmDelete() {
+    return confirm("삭제하시겠습니까?");
+}
+
+function openCommentPopup() {
+    const popup = document.getElementById("commentPopup");
+    if (popup) popup.style.display = "block";
+}
+
+function closeCommentPopup() {
+    const popup = document.getElementById("commentPopup");
+    if (popup) popup.style.display = "none";
+}
+</script>
+
+{% endblock %}

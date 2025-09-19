@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <style>
+        .image-content {
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-content img {
+            max-width: 90%;
+            max-height: 200px;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 700px) {
+            .prayer-text {
+                padding: 15px 20px !important;
+                margin: 20px 10px !important;
+            }
+        }
+    </style>
+
+
+    <!-- ------------------------------ Content ------------------------------------- -->
+   <div style="
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     border-radius: 20px;
+     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+     margin: 20px auto;
+     max-width: 700px;
+    ">
+         <img
+           src="{% static 'JoshuaLee.png' %}"
+           alt="East Pilgrim"
+           style="
+             max-width: 100%;
+             height: auto;
+             border-radius: 16px;
+             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+             transition: transform 0.3s ease;
+           "
+           onmouseover="this.style.transform='scale(1.02)'"
+           onmouseout="this.style.transform='scale(1)'"
+         >
+    </div>
+    <div class="prayer-text" style="padding: 15px 40px; margin-top: 0.5rem; margin-left: 10px; margin-right: 10px;">
+        <p style="text-align: center; font-size: 1.3rem; color: #C1D7AE; font-family: NotoSansKR-Regular;">
+            하늘에 계신 우리 아버지여 <br> 이름이 거룩히 여김을 받으시오며 <br>
+            나라가 임하시오며 <br> 뜻이 하늘에서 이루어진 것 같이 <br> 땅에서도 이루어지이다
+            <br> 오늘 우리에게 일용할 양식을 주시옵고 <br>
+            우리가 우리에게 죄 지은 자를 <br> 사하여 준 것 같이 <br> 우리 죄를 사하여 주시옵고 <br>
+            우리를 시험에 들게 하지 마시옵고 <br> 다만 악에서 구하시옵소서 <br> 나라와 권세와 영광이 아버지께 영원히 있사옵나이다 아멘</p>
+        </p>
+        <br>
+        <br>
+        <p style="text-align: center; font-size: 1.9rem; color: #C1D7AE; font-weight: bold; font-family: NanumDdoBagDdoBag;">
+            Our Father in heaven, <br> hallowed be your name. <br>
+            Your kingdom come, your will be done, <br> on earth as it is in heaven.
+            <br> Give us this day our daily bread, <br> and forgive us our debts, <br> as we also have forgiven our debtors.
+            <br> And lead us not into temptation, <br> but deliver us from evil. <br>
+            For thine is the kingdom, and the power, and the glory, forever and ever. Amen.
+        </p>
+        <br>
+        <br>
+        <p style="text-align: center; font-size: 1.3rem; color: #C1D7AE; font-family: NanumDdoBagDdoBag;">
+            אבינו שבשמים
+            יתקדש שמך, תבוא מלכותך, יעשה רצונך כבשמים כן בארץ
+            את לחם חקנו תן לנו היום
+            וסלח לנו על חטאינו, כפי שסולחים גם אנחנו לחוטאים לנו
+            ואל תביאנו לידי ניסיון, כי אם חלצנו מן הרע
+            כי לך הממלכה והגבורה והתפארת לעולמי עולמים
+            אמן
+        </p>
+    </div>
+
+{% endblock %}
