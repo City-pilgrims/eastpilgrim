@@ -19,8 +19,11 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from preachapp.views import intro_images
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin-eastpilgrim-2025/', admin.site.urls),
+    path('', intro_images, name='intro'),
     path('preach/', include('preachapp.urls')),
     path('board/', include('boardapp.urls')),
 
