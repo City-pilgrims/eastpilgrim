@@ -15,6 +15,9 @@ environ.Env.read_env(
     env_file = os.path.join(BASE_DIR,'.env')
 )
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = read_secret('DJANGO_SECRET_KEY')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
@@ -23,13 +26,14 @@ ALLOWED_HOSTS = ['eastpilgrim.org', 'www.eastpilgrim.org', 'm.eastpilgrim.org', 
 CSRF_TRUSTED_ORIGINS = [
     'https://eastpilgrim.org',
     'https://www.eastpilgrim.org',
+    'http://158.247.254.218',
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # 쿠키 보안 설정 강화
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
 SESSION_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SAMESITE = 'Lax'
