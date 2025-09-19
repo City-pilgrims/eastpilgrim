@@ -1,6 +1,6 @@
 {
   "name": "EastPilgrim",
-  "short_name": "JoshuaLee",
+  "short_name": "KedemKor",
   "start_url": "/preach/intro/",
   "display": "standalone",
   "background_color": "#5A1E1E",
@@ -12,9 +12,9 @@
       "sizes": "204x204"
     },
     {
-      "src": "/static/icons/icon-409.png",
+      "src": "/static/icons/icon-441.png",
       "type": "image/png",
-      "sizes": "409x409"
+      "sizes": "441x441"
     }
   ]
 }
