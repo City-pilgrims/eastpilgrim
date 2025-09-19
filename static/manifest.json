@@ -1,0 +1,20 @@
+{
+  "name": "EastPilgrim",
+  "short_name": "JoshuaLee",
+  "start_url": "/preach/intro/",
+  "display": "standalone",
+  "background_color": "#5A1E1E",
+  "theme_color": "#C1D7AE",
+  "icons": [
+    {
+      "src": "/static/icons/icon-204.png",
+      "type": "image/png",
+      "sizes": "204x204"
+    },
+    {
+      "src": "/static/icons/icon-409.png",
+      "type": "image/png",
+      "sizes": "409x409"
+    }
+  ]
+}
